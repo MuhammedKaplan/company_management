@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Employee, CheckInOut, LeaveRequest
 
-# Register your models here.
+admin.site.register(Employee)
+admin.site.register(CheckInOut)
+admin.site.register(LeaveRequest)
