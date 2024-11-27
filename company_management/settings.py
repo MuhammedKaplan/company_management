@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,14 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'your@mail.com'
 EMAIL_HOST_PASSWORD = 'your_password'
+
+# Channels settings
+ASGI_APPLICATION = 'company_management.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
