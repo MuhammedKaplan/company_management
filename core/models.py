@@ -3,12 +3,17 @@ from django.db import models
 
 
 class Employee(models.Model):
+    ROLE_CHOICES = [
+        ('MANAGER', 'Manager'),
+        ('STAFF', 'Staff'),
+    ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='STAFF')
     start_date = models.DateField()
     remaining_leaves = models.PositiveIntegerField(default=15)
 
     def __str__(self):
-        return self.user.username
+        return f"{self.user.username} ({self.get_role_display()})"
 
 
 class CheckInOut(models.Model):

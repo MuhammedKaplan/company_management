@@ -1,4 +1,6 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+
 from .models import Employee, CheckInOut, LeaveRequest
 from .serializers import EmployeeSerializer, CheckInOutSerializer, LeaveRequestSerializer
 from .tasks import send_late_notification
@@ -7,6 +9,12 @@ from .tasks import send_late_notification
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.employee.role == 'MANAGER':
+            return Employee.objects.all()
+        return Employee.objects.filter(user=self.request.user)
 
 
 class CheckInOutViewSet(viewsets.ModelViewSet):
