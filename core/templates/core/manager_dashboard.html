@@ -1,0 +1,66 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard</title>
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+    <script defer src="{% static 'core/manager_dashboard.js' %}"></script>
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Left Sidebar -->
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <button id="menu-toggle">☰</button>
+        </div>
+        <ul class="menu-items">
+            <li><a href="#"><span class="icon">📋</span><span class="text">Employee Info</span></a></li>
+            <li><a href="#"><span class="icon">🔔</span><span class="text">Notifications</span></a></li>
+            <li><a href="#"><span class="icon">📄</span><span class="text">Leave Requests</span></a></li>
+            <li><a href="#"><span class="icon">🚪</span><span class="text">Logout</span></a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <header>
+            <!-- Notifications Button -->
+            <button id="notifications-button" class="notification-icon">🔔</button>
+            <!-- User Profile -->
+            <div class="user-profile">
+                <img src="{% static 'core/profile-icon.png' %}" alt="Profile Icon">
+                <span>{{ user.first_name }} {{ user.last_name }}</span>
+            </div>
+        </header>
+
+        <!-- Notification Drawer -->
+        <div id="notification-drawer" class="hidden">
+            <h3>Notifications</h3>
+            <ul id="notification-list">
+                <!-- Notification items will be added dynamically here -->
+            </ul>
+            <button id="view-all-notifications">View All Notifications</button>
+        </div>
+
+        <section>
+            <h1>Manager Dashboard</h1>
+            <!-- Late Employees -->
+            <div class="info-box">
+                <h2>Late Employees</h2>
+                <ul id="late-employee-list">
+                    {% for employee in late_employees %}
+                        <li>
+                            <strong>{{ employee.name }}</strong> - {{ employee.late_minutes }} minutes late
+                        </li>
+                    {% empty %}
+                        <li>No late employees today.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

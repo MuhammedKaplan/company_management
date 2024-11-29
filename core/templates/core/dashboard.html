@@ -1,0 +1,48 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+    <script defer src="{% static 'core/dashboard.js' %}"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Left Sidebar -->
+        <aside id="sidebar">
+            <div class="sidebar-header">
+                <button id="menu-toggle">
+                    ☰
+                </button>
+            </div>
+            <ul class="menu-items">
+                <li><a href="{% url 'leave-request-list' %}"><span class="icon">📋</span><span class="text">Leave Requests</span></a></li>
+                <li><a href="#"><span class="icon">👤</span><span class="text">Profile</span></a></li>
+                <li><a href="#"><span class="icon">🔔</span><span class="text">Notifications</span></a></li>
+                <li><a href="#"><span class="icon">🚪</span><span class="text">Logout</span></a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <header>
+                <div class="user-profile">
+                    <img src="{% static 'core/profile-icon.png' %}" alt="Profile Icon">
+                    <span>{{ user.first_name }} {{ user.last_name }}</span>
+                </div>
+            </header>
+            <section>
+                {% if user.employee.role == 'MANAGER' %}
+                    <h2>Manager Dashboard</h2>
+                    <p>Manage leave requests and view reports.</p>
+                {% else %}
+                    <h2>Employee Dashboard</h2>
+                    <p>View your leave status and requests.</p>
+                {% endif %}
+            </section>
+        </main>
+    </div>
+</body>
+</html>
