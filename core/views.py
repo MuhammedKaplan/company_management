@@ -1,10 +1,9 @@
 from rest_framework import status, viewsets
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from datetime import datetime
 
-from .models import Employee, CheckInOut, LeaveRequest
+from .models import Employee, LeaveRequest
 from .serializers import EmployeeSerializer, CheckInSerializer, LeaveRequestSerializer, CheckOutSerializer
 
 
@@ -37,6 +36,40 @@ class CheckOutView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class LeaveRequestViewSet(viewsets.ModelViewSet):
-    queryset = LeaveRequest.objects.all()
-    serializer_class = LeaveRequestSerializer
+class LeaveRequestListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        leave_requests = LeaveRequest.objects.filter(employee=request.user).order_by('-requested_at')
+        serializer = LeaveRequestSerializer(leave_requests, many=True)
+        return Response(serializer.data)
+
+
+class LeaveRequestCreateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = LeaveRequestSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(employee=request.user)
+            return Response({"message": "Leave request created successfully."}, status=201)
+        return Response(serializer.errors, status=400)
+
+
+class LeaveRequestApprovalView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, leave_request_id, status):
+        try:
+            leave_request = LeaveRequest.objects.get(id=leave_request_id)
+            if status not in ['APPROVED', 'REJECTED']:
+                return Response({"error": "Invalid status."}, status=400)
+
+            if leave_request.status != 'PENDING':
+                return Response({"error": "Leave request is not pending approval."}, status=400)
+
+            leave_request.status = status
+            leave_request.save()
+            return Response({"message": f"Leave request {status.lower()} successfully."}, status=200)
+        except LeaveRequest.DoesNotExist:
+            return Response({"error": "Leave request not found."}, status=404)

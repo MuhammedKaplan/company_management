@@ -4,7 +4,8 @@ from datetime import datetime, time
 
 from rest_framework import serializers
 from .models import Employee, CheckInOut, LeaveRequest
-from .tasks import send_late_notification
+from .notification import create_notification
+from .leave import deduct_leave_for_lateness
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
@@ -42,9 +43,13 @@ class CheckInSerializer(serializers.ModelSerializer):
         # Calculate late minutes
         late_minutes = max(0, int((validated_data['check_in_time'] - expected_start_time).total_seconds() // 60))
 
+        # Deduct leave for lateness
+        deduct_leave_for_lateness(employee, late_minutes)
+
         # Send notification if late
         if late_minutes > 0:
-            send_late_notification(employee.id)
+            message = f"{employee.user.username} is late by {late_minutes} minutes."
+            create_notification(message, role='MANAGER', send_notification=True, send_email=True)
 
         # Create the check-in record
         return CheckInOut.objects.create(employee=employee, late_minutes=late_minutes, **validated_data)
@@ -87,6 +92,15 @@ class CheckOutSerializer(serializers.ModelSerializer):
 
 
 class LeaveRequestSerializer(serializers.ModelSerializer):
+    employee = serializers.StringRelatedField(read_only=True)
+    status = serializers.CharField(read_only=True)
+    requested_at = serializers.DateTimeField(read_only=True)
+    updated_at = serializers.DateTimeField(read_only=True)
+    leave_duration = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = LeaveRequest
-        fields = '__all__'
+        fields = [
+            'id', 'employee', 'leave_type', 'start_date', 'end_date',
+            'reason', 'status', 'requested_at', 'updated_at', 'leave_duration'
+        ]
