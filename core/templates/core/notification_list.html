@@ -1,0 +1,30 @@
+﻿{% extends 'core/base.html' %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block sidebar-items %}
+    {% if "manager" not in request.path %}
+        <li><a href="{% url 'my-leaves' %}"><span class="icon">📄</span><span class="text">Leave Requests</span></a></li>
+    {% else %}
+        <li><a href="{% url 'manage-employees' %}"><span class="icon">📋</span><span class="text">Employees</span></a></li>
+        <li><a href="{% url 'manage-leave-requests' %}"><span class="icon">📄</span><span class="text">Leave Requests</span></a></li>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h1>Notifications</h1>
+    <div class="notification-list">
+        {% if notifications %}
+            <ul>
+                {% for notification in notifications %}
+                    <li>
+                        <p class="notification-message">{{ notification.message }}</p>
+                        <p class="notification-date">{{ notification.created_at|date:"F d, Y H:i" }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No notifications available.</p>
+        {% endif %}
+    </div>
+{% endblock %}

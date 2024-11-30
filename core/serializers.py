@@ -49,7 +49,7 @@ class CheckInSerializer(serializers.ModelSerializer):
         # Send notification if late
         if late_minutes > 0:
             message = f"{employee.user.username} is late by {late_minutes} minutes."
-            create_notification(message, role='MANAGER', send_notification=True, send_email=True)
+            create_notification(message, role='MANAGER')
 
         # Create the check-in record
         return CheckInOut.objects.create(employee=employee, late_minutes=late_minutes, **validated_data)

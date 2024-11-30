@@ -10,6 +10,6 @@ def deduct_leave_for_lateness(employee, late_minutes):
 
     if employee.remaining_leaves < 3:  # TODO: Move this to settings
         message = f'{employee.user.username} has {employee.remaining_leaves} days of leave remaining.'
-        create_notification(message, role='MANAGER', send_notification=True, send_email=True)
+        create_notification(message, role='MANAGER')
 
     return leave_deduction

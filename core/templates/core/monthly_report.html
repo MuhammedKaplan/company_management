@@ -1,0 +1,60 @@
+﻿{% extends "core/base.html" %}
+
+{% block title %}Monthly Report{% endblock %}
+
+{% block content %}
+    <!-- Work Hours Statistics -->
+    <div class="report-table-container">
+        <h2>Work Hours This Month</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Employee Name</th>
+                <th>Total Work Hours</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for record in monthly_work_hours %}
+                    <script>
+                        console.log("{{ record }}");
+                    </script>
+                    <tr>
+                        <td>{{ record.employee__user__first_name }} {{ record.employee__user__last_name }}</td>
+                        <td>{{ record.total_work_hours }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2">No work hours recorded for this month.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Late Arrival Statistics -->
+    <div class="report-table-container">
+        <h2>Late Arrival Statistics</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Employee Name</th>
+                <th>Late Arrivals</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for record in late_statistics %}
+                    <script>
+                        console.info("late:: {{ record }}");
+                    </script>
+                    <tr>
+                        <td>{{ record.employee__user__first_name }} {{ record.employee__user__last_name }}</td>
+                        <td>{{ record.total_late_minutes }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2">No late arrivals recorded for this month.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+{% endblock %}

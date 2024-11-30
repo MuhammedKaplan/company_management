@@ -1,0 +1,110 @@
+﻿{% extends "core/base.html" %}
+
+{% block title %}Manage Leave Requests{% endblock %}
+
+{% block content %}
+<h1>Manage Leave Requests</h1>
+
+{% block sidebar-items %}
+    <li><a href="{% url 'manage-employees' %}"><span class="icon">📋</span><span class="text">Employees</span></a></li>
+    <li><a href="{% url 'manage-leave-requests' %}"><span class="icon">📄</span><span class="text">Leave Requests</span></a></li>
+{% endblock %}
+
+<!-- Pending Requests -->
+<div class="leave-requests-container">
+    <h2>Pending Requests</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Leave Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Reason</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in pending_requests %}
+                <tr>
+                    <td>{{ request.employee.user.first_name }} {{ request.employee.user.last_name }}</td>
+                    <td>{{ request.leave_type }}</td>
+                    <td>{{ request.start_date }}</td>
+                    <td>{{ request.end_date }}</td>
+                    <td>{{ request.reason }}</td>
+                    <td>
+                        <a href="{% url 'update-leave-request-status' request.id 'APPROVED' %}" class="btn approve">Approve</a>
+                        <a href="{% url 'update-leave-request-status' request.id 'REJECTED' %}" class="btn reject">Reject</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6">No pending leave requests.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Approved Requests -->
+<div class="leave-requests-container">
+    <h2>Approved Requests</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Leave Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in approved_requests %}
+                <tr>
+                    <td>{{ request.employee.user.first_name }} {{ request.employee.user.last_name }}</td>
+                    <td>{{ request.leave_type }}</td>
+                    <td>{{ request.start_date }}</td>
+                    <td>{{ request.end_date }}</td>
+                    <td>{{ request.reason }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No approved leave requests.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Rejected Requests -->
+<div class="leave-requests-container">
+    <h2>Rejected Requests</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Leave Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in rejected_requests %}
+                <tr>
+                    <td>{{ request.employee.user.first_name }} {{ request.employee.user.last_name }}</td>
+                    <td>{{ request.leave_type }}</td>
+                    <td>{{ request.start_date }}</td>
+                    <td>{{ request.end_date }}</td>
+                    <td>{{ request.reason }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No rejected leave requests.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

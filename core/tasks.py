@@ -1,11 +1,12 @@
 ﻿from asgiref.sync import async_to_sync
+
 from celery import shared_task
 from channels.layers import get_channel_layer
 from django.core.mail import send_mail
 
 
 @shared_task
-def send_late_notification(users, message):
+def send_notification(users, message):
     channel_layer = get_channel_layer()
 
     for user in users:
@@ -21,7 +22,7 @@ def send_late_notification(users, message):
 
 
 @shared_task
-def send_late_email(users, message):
+def send_email(users, message):
     for user in users:
         send_mail(
             'Late Notification',

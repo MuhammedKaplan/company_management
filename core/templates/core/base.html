@@ -1,0 +1,77 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Default Title{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+    {% if "login" not in request.path %}
+        <script src="{% static 'core/ws_notifications.js' %}" defer></script>
+    {% endif %}
+    <script src="{% static 'core/go_to_dashboard.js' %}" defer></script>
+    <script src="{% static 'core/notification_list.js' %}" defer></script>
+    {% block extra-head %}
+    {% endblock %}
+
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Mutual Sidebar -->
+    <aside id="sidebar">
+        <div class="sidebar-header">
+            <button id="menu-toggle">☰</button>
+        </div>
+        <ul class="menu-items">
+            <!-- if page is not dashboard, show go back button -->
+            {% if "dashboard" not in request.path %}
+                <li>
+                    <div class="back-to-dashboard-button-container">
+                        <button id="go-to-dashboard-button" class="btn back-to-dashboard-button">Back to Dashboard
+                        </button>
+                    </div>
+                </li>
+            {% endif %}
+
+            {% block sidebar-items %}
+            {% endblock %}
+
+            <li><a href="{% if "manager" in request.path %}{% url 'manager-notification-list' %}
+                {% else %}{% url 'notification-list' %}{% endif %}">
+                <span class="icon">🔔</span><span class="text">Notifications</span></a></li>
+        </ul>
+    </aside>
+
+    <!-- Live Notification -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Main Content -->
+    <main>
+        <header>
+            <!-- Notifications Button -->
+            <button id="notifications-button" class="notification-icon">🔔</button>
+            <!-- User Profile -->
+            <div class="user-profile">
+                <img src="{% static 'core/profile-icon.png' %}" alt="Profile Icon">
+                <span>{{ user.first_name }} {{ user.last_name }}</span>
+                <a href="{% url 'logout' %}" class="btn logout">Logout</a>
+            </div>
+        </header>
+
+        <!-- Notification Drawer -->
+        <div id="notification-drawer" class="hidden">
+            <h3>Notifications</h3>
+            <ul id="notification-list">
+                <!-- Notification items will be added dynamically here -->
+            </ul>
+            <button id="view-all-notifications">View All Notifications</button>
+        </div>
+
+        <section>
+            {% block content %}
+            {% endblock %}
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+﻿{% extends "core/base.html" %}
+
+{% block title %}Leave History{% endblock %}
+
+{% block content %}
+{% if error_message %}
+    <div class="error-message">{{ error_message }}</div>
+{% else %}
+    <h1>Leave History for {{ employee.user.first_name }} {{ employee.user.last_name }}</h1>
+    <div class="leave-history-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Leave Type</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in leave_requests %}
+                    <tr>
+                        <td>{{ request.leave_type }}</td>
+                        <td>{{ request.start_date }}</td>
+                        <td>{{ request.end_date }}</td>
+                        <td>{{ request.reason }}</td>
+                        <td>
+                            {% if request.status == 'PENDING' %}
+                                <span class="status pending">Pending</span>
+                            {% elif request.status == 'APPROVED' %}
+                                <span class="status approved">Approved</span>
+                            {% else %}
+                                <span class="status rejected">Rejected</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5">No leave history available.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+{% endblock %}

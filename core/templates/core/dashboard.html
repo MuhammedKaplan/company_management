@@ -1,48 +1,35 @@
-﻿{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Dashboard</title>
-    <link rel="stylesheet" href="{% static 'core/style.css' %}">
-    <script defer src="{% static 'core/dashboard.js' %}"></script>
-</head>
-<body>
-    <div class="dashboard-container">
-        <!-- Left Sidebar -->
-        <aside id="sidebar">
-            <div class="sidebar-header">
-                <button id="menu-toggle">
-                    ☰
-                </button>
-            </div>
-            <ul class="menu-items">
-                <li><a href="{% url 'leave-request-list' %}"><span class="icon">📋</span><span class="text">Leave Requests</span></a></li>
-                <li><a href="#"><span class="icon">👤</span><span class="text">Profile</span></a></li>
-                <li><a href="#"><span class="icon">🔔</span><span class="text">Notifications</span></a></li>
-                <li><a href="#"><span class="icon">🚪</span><span class="text">Logout</span></a></li>
-            </ul>
-        </aside>
+﻿{% extends "core/base.html" %}
 
-        <!-- Main Content -->
-        <main>
-            <header>
-                <div class="user-profile">
-                    <img src="{% static 'core/profile-icon.png' %}" alt="Profile Icon">
-                    <span>{{ user.first_name }} {{ user.last_name }}</span>
-                </div>
-            </header>
-            <section>
-                {% if user.employee.role == 'MANAGER' %}
-                    <h2>Manager Dashboard</h2>
-                    <p>Manage leave requests and view reports.</p>
-                {% else %}
-                    <h2>Employee Dashboard</h2>
-                    <p>View your leave status and requests.</p>
-                {% endif %}
-            </section>
-        </main>
+{% block title %}Employee Dashboard{% endblock %}
+
+{% block sidebar-items %}
+    <li><a href="{% url 'my-leaves' %}"><span class="icon">📄</span><span class="text">Leave Requests</span></a></li>
+{% endblock %}
+
+{% block content %}
+<h1>Welcome, {{ request.user.first_name }}!</h1>
+
+<!-- Dashboard Summary -->
+<div class="dashboard-summary">
+    <div class="summary-card">
+        <h3>Remaining Annual Leave</h3>
+        <p>{{ remaining_leaves }}</p>
     </div>
-</body>
-</html>
+    <div class="summary-card">
+        <h3>Total Used Leave This Year</h3>
+        <p>{{ total_used_leaves }}</p>
+    </div>
+    <div class="summary-card">
+        <h3>Pending Leave Request</h3>
+        {% if pending_leave_request %}
+        <p>{{ pending_leave_request.leave_type }} ({{ pending_leave_request.start_date }} - {{ pending_leave_request.end_date }})</p>
+        {% else %}
+        <p>No pending requests</p>
+        {% endif %}
+    </div>
+    <div class="summary-card">
+        <h3>Total Late Minutes This Month</h3>
+        <p>{{ total_late_minutes }}</p>
+    </div>
+</div>
+{% endblock %}

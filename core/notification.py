@@ -1,10 +1,10 @@
 ﻿from django.contrib.auth.models import User
 
 from .models import Notification
-from .tasks import send_late_notification, send_late_email
+from .tasks import send_notification, send_email
 
 
-def create_notification(message, role=None, users=None, send_notification=False, send_email=False):
+def create_notification(message, role=None, users=None, is_send_notification=True, is_send_email=True):
     if role:
         users = User.objects.filter(employee__role=role)
     elif users:
@@ -18,9 +18,8 @@ def create_notification(message, role=None, users=None, send_notification=False,
     ]
     Notification.objects.bulk_create(notifications)
 
-    if send_notification:
-        send_late_notification(users, message)
+    if is_send_notification:
+        send_notification(users, message)
 
-    if send_email:
-        send_late_email(users, message)
-
+    if is_send_email:
+        send_email(users, message)

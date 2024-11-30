@@ -1,66 +1,47 @@
-﻿{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manager Dashboard</title>
-    <link rel="stylesheet" href="{% static 'core/style.css' %}">
-    <script defer src="{% static 'core/manager_dashboard.js' %}"></script>
-</head>
-<body>
-<div class="dashboard-container">
-    <!-- Left Sidebar -->
-    <aside id="sidebar">
-        <div class="sidebar-header">
-            <button id="menu-toggle">☰</button>
-        </div>
-        <ul class="menu-items">
-            <li><a href="#"><span class="icon">📋</span><span class="text">Employee Info</span></a></li>
-            <li><a href="#"><span class="icon">🔔</span><span class="text">Notifications</span></a></li>
-            <li><a href="#"><span class="icon">📄</span><span class="text">Leave Requests</span></a></li>
-            <li><a href="#"><span class="icon">🚪</span><span class="text">Logout</span></a></li>
-        </ul>
-    </aside>
+﻿{% extends "core/base.html" %}
+{% load static %}
 
-    <!-- Main Content -->
-    <main>
-        <header>
-            <!-- Notifications Button -->
-            <button id="notifications-button" class="notification-icon">🔔</button>
-            <!-- User Profile -->
-            <div class="user-profile">
-                <img src="{% static 'core/profile-icon.png' %}" alt="Profile Icon">
-                <span>{{ user.first_name }} {{ user.last_name }}</span>
-            </div>
-        </header>
+{% block extra-head %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script id="leaveUsageData" type="application/json">{{ leave_usage|safe }}</script>
+    <script id="lateStatsData" type="application/json">{{ late_statistics|safe }}</script>
+    <script src="{% static 'core/manager_dashboard.js' %}"></script>
+{% endblock %}
 
-        <!-- Notification Drawer -->
-        <div id="notification-drawer" class="hidden">
-            <h3>Notifications</h3>
-            <ul id="notification-list">
-                <!-- Notification items will be added dynamically here -->
-            </ul>
-            <button id="view-all-notifications">View All Notifications</button>
-        </div>
+{% block title %}Manager Dashboard{% endblock %}
 
-        <section>
-            <h1>Manager Dashboard</h1>
-            <!-- Late Employees -->
-            <div class="info-box">
-                <h2>Late Employees</h2>
-                <ul id="late-employee-list">
-                    {% for employee in late_employees %}
-                        <li>
-                            <strong>{{ employee.name }}</strong> - {{ employee.late_minutes }} minutes late
-                        </li>
-                    {% empty %}
-                        <li>No late employees today.</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </section>
-    </main>
+{% block sidebar-items %}
+    <li><a href="{% url 'manage-employees' %}"><span class="icon">📋</span><span class="text">Employees</span></a></li>
+    <li><a href="{% url 'manage-leave-requests' %}"><span class="icon">📄</span><span class="text">Leave Requests</span></a></li>
+{% endblock %}
+
+{% block content %}
+<h1>Manager Dashboard</h1>
+
+<!-- Summary Information -->
+<div class="summary-panel">
+    <div class="summary-item">
+        <h2>Total Employees</h2>
+        <p>{{ total_employees }}</p>
+    </div>
+    <div class="summary-item">
+        <h2>Pending Leave Requests</h2>
+        <p>{{ pending_leave_requests }}</p>
+    </div>
+    <div class="summary-item">
+        <h2>Late Employees Today</h2>
+        <p>{{ late_employees }}</p>
+    </div>
 </div>
-</body>
-</html>
+
+<!-- Charts -->
+<div class="charts-container">
+    <h2>Annual Leave Usage</h2>
+    <canvas id="leaveUsageChart"></canvas>
+</div>
+
+<div class="charts-container">
+    <h2>Late Arrival Statistics</h2>
+    <canvas id="lateStatisticsChart"></canvas>
+</div>
+{% endblock %}

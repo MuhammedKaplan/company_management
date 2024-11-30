@@ -4,14 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="login-type" content="manager">
     <title>Manager Login</title>
     <link rel="stylesheet" href="{% static 'core/style.css' %}">
+    <script src="{% static 'core/login.js' %}" defer></script>
 </head>
 <body>
     <div class="login-container">
         <div class="login-box">
             <h1>Manager Login</h1>
-            <form method="POST">
+            <form method="POST" id="login-form">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="username">Username</label>

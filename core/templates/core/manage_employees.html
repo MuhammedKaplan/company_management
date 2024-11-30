@@ -1,0 +1,42 @@
+﻿{% extends "core/base.html" %}
+
+{% block title %}Manage Employees{% endblock %}
+
+{% block sidebar-items %}
+    <li><a href="{% url 'manage-employees' %}"><span class="icon">📋</span><span class="text">Employees</span></a></li>
+    <li><a href="{% url 'manage-leave-requests' %}"><span class="icon">📄</span><span class="text">Leave Requests</span></a></li>
+{% endblock %}
+
+{% block content %}
+<h1>Manage Employees</h1>
+<div class="employees-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Annual Leave Remaining</th>
+                <th>Leave History</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.user.first_name }} {{ employee.user.last_name }}</td>
+                    <td>{{ employee.user.email }}</td>
+                    <td>{{ employee.role }}</td>
+                    <td>{{ employee.remaining_leaves }} days</td>
+                    <td>
+                        <a href="{% url 'leave-history' %}?employee_id={{ employee.id }}" class="btn">View</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No employees found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
