@@ -1,11 +1,11 @@
-﻿import pytz
+﻿from datetime import datetime
 
-from datetime import datetime, time
-
+import pytz
 from rest_framework import serializers
+
+from .leave import deduct_leave_for_lateness
 from .models import Employee, CheckInOut, LeaveRequest
 from .notification import create_notification
-from .leave import deduct_leave_for_lateness
 
 
 class EmployeeSerializer(serializers.ModelSerializer):

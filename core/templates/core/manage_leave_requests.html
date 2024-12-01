@@ -2,13 +2,13 @@
 
 {% block title %}Manage Leave Requests{% endblock %}
 
-{% block content %}
-<h1>Manage Leave Requests</h1>
-
 {% block sidebar-items %}
     <li><a href="{% url 'manage-employees' %}"><span class="icon">📋</span><span class="text">Employees</span></a></li>
     <li><a href="{% url 'manage-leave-requests' %}"><span class="icon">📄</span><span class="text">Leave Requests</span></a></li>
 {% endblock %}
+
+{% block content %}
+<h1>Manage Leave Requests</h1>
 
 <!-- Pending Requests -->
 <div class="leave-requests-container">

@@ -156,11 +156,6 @@ def dashboard(request):
         check_in_time__month=today.month
     ).aggregate(total_late_minutes=Sum('late_minutes'))['total_late_minutes'] or 0
 
-    print(f'remaining_leaves:: {remaining_leaves}')
-    print(f'total_used_leaves:: {total_used_leaves}')
-    print(f'pending_leave_request:: {pending_leave_request}')
-    print(f'total_late_minutes:: {total_late_minutes}')
-
     return render(request, 'core/dashboard.html', {
         'remaining_leaves': remaining_leaves,
         'total_used_leaves': total_used_leaves,

@@ -9,12 +9,12 @@ router.register(r'employees', EmployeeViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('checkin', CheckInView.as_view(), name='checkin'),  # POST
-    path('checkout', CheckOutView.as_view(), name='checkout'),  # POST
-    path('checkout<int:employee_id>', CheckOutView.as_view(), name='checkout-with-id'),  # POST
-    path('leaverequests', LeaveRequestListView.as_view(), name='leave-request-list'),  # GET
-    path('leaverequests/create', LeaveRequestCreateView.as_view(), name='leave-request-create'),  # POST
-    path('leaverequests/<int:leave_request_id>/<str:status>', LeaveRequestApprovalView.as_view(),  # POST
+    path('checkin', CheckInView.as_view(), name='checkin'),
+    path('checkout', CheckOutView.as_view(), name='checkout'),
+    path('checkout<int:employee_id>', CheckOutView.as_view(), name='checkout-with-id'),
+    path('leaverequests', LeaveRequestListView.as_view(), name='leave-request-list'),
+    path('leaverequests/create', LeaveRequestCreateView.as_view(), name='leave-request-create'),
+    path('leaverequests/<int:leave_request_id>/<str:status>', LeaveRequestApprovalView.as_view(),
          name='leave-request-approval'),
-    path('notifications', get_notifications, name='get-notifications'),  # GET
+    path('notifications', get_notifications, name='get-notifications'),
 ]

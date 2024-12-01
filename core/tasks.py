@@ -18,7 +18,7 @@ def send_notification(users, message):
             }
         )
 
-    return f'Notification sent to {', '.join([user.username for user in users])}'
+    return f'Notification sent to ', ', '.join([user.username for user in users])
 
 
 @shared_task
@@ -31,4 +31,4 @@ def send_email(users, message):
             [user.email],
         )
 
-    return f'Email sent to {', '.join([user.username for user in users])}'
+    return f'Email sent to ', ', '.join([user.username for user in users])
